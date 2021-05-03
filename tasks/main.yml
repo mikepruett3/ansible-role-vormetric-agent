@@ -31,4 +31,4 @@
   command: ./{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin -v -s /tmp/silentInstallsec
   args:
     chdir: "/root/software/"
-    #creates: ""
+    creates: "/opt/vormetric/DataSecurityExpert/agent/secfs/bin/uninstall"
