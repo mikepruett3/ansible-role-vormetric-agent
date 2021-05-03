@@ -2,7 +2,7 @@
 
 software_url: "http://www.example.org"
 package_base_name: "vee-fs"
-package_version: "6.3.1-82"
+package_version: "6.3.1-76"
 dsm_hostname: "mydsm.example.org"
 host_domain: "dsm_domain"
 registration_secret: "mystrongpass"

@@ -40,10 +40,11 @@
       name: kernel.kptr_restrict
       value: '1'
       state: present
+    register: sysctl
     when: kptr_restrict.stdout != "1"
   - name: "Reboot host"
     reboot:
-    when: kptr_restrict.stdout != "1"
+    when: reboot.reboot_required or sysctl.changed
 
 - name: "Create software directory under root homedir, if it does not exist"
   file:
