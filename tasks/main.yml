@@ -1,2 +1,29 @@
 ---
-# tasks file for ansible-role-vormetric-agent/
+- name: "Gather the package facts"
+  ansible.builtin.package_facts:
+    manager: auto
+  when: ansible_facts.packages is not defined
+
+- name: "Create software directory under root homedir, if it does not exist"
+  file:
+    path: "/root/software/"
+    state: directory
+
+- name: "Check if installer package already exist"
+  stat:
+    path: "/root/software/{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin"
+  register: package
+
+- name: "Download installer package from local repository"
+  get_url:
+    url: "{{ software_url }}/{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin"
+    dest: "/root/software/"
+    validate_certs: no
+    mode: 0777
+  when: package.stat.exists != True
+
+#- name: "Install Vormetric Agent, if not already installed"
+#  command: ./{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin
+#  args:
+#    chdir: "/root/software/"
+#    #creates: ""

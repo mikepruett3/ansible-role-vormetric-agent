@@ -1,2 +1,5 @@
 ---
-# defaults file for ansible-role-vormetric-agent/
+
+software_url: "http://www.example.org"
+package_base_name: "vee-fs"
+package_version: "6.3.1-82"
