@@ -22,6 +22,11 @@
     mode: 0777
   when: package.stat.exists != True
 
+- name: "Deploy register_host file, for silent install"
+  template:
+    src: register.j2
+    dest: /tmp/silentInstallsec
+  
 #- name: "Install Vormetric Agent, if not already installed"
 #  command: ./{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin
 #  args:
