@@ -1,22 +1,45 @@
-Role Name
+Ansible Role: Thales Vormetric Transparent Encryption agent
 =========
 
-A brief description of the role goes here.
+Ansible role to install [Thales Vormetric Transparent Encryption](https://www.thalestct.com/Solutions/Enterprise-Security/data-encryption/Vormetric%20Data%20at%20Rest%20Encryption/vte/index.html) agent on Linux Servers.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+The role does not require anyting to run on RHEL and its derivatives.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Available variables are listed below, along with default values ```(see defaults/main.yml)```:
+
+```
+software_url: "http://www.example.org"
+package_base_name: "vee-fs"
+package_version: "6.3.1-82"
+dsm_hostname: "mydsm.example.org"
+host_domain: "dsm_domain"
+registration_secret: "mystrongpass"
+```
+
+```software_url``` **(Required)** The URL that hosts the Installer package. This should be either **http** or **https**.
+
+```package_base_name``` **(Required)** The Installer package base (or begining) name. Unless Thales changes this in the future, should allways be **vee-fs**
+
+```package_version``` **(Required)** The version of the installer package. Agents are updated from time to time, so this var can be overridden with the latest version.
+
+```dsm_hostname``` **(Required)** The fully-qualified hostname (or IP address) of the Data Security Manager (DSM) appliance.
+
+```host_domain``` **(Required)** The Domain to attach newly registered agents. This name will have to match exactly how it is created in the DSM.
+
+```registration_secret``` **(Required)** The shared password used for automatic registration of agents to the DSM.
+
+Role variables can be stored with the hosts.yaml file, or in the main variables file.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
 
 Example Playbook
 ----------------
@@ -25,14 +48,21 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - role: mikepruett3.vormetric-agent
+           vars:
+             software_url: "http://www.example.org"
+             package_base_name: "vee-fs"
+             package_version: "6.3.1-82"
+             dsm_hostname: "mydsm.example.org"
+             host_domain: "dsm_domain"
+             registration_secret: "mystrongpass"
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Role created by [mikepruett3](https://github.com/mikepruett3) on [Github.com](https://github.com/mikepruett3)
