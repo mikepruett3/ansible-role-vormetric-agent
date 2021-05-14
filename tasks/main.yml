@@ -11,7 +11,7 @@
       state: disabled
     register: reboot
   - name: "Add hosts entry for local host IP address"
-    lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/hosts
       insertafter: EOF
       line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }}  {{ inventory_hostname.split('.')[0] }}"
@@ -36,28 +36,28 @@
     command: sysctl -n kernel.kptr_restrict
     register: kptr_restrict
   - name: "Enable full Kernel Symbols to prevent SegFault"
-    sysctl:
+    ansible.builtin.sysctl:
       name: kernel.kptr_restrict
       value: '1'
       state: present
     register: sysctl
     when: kptr_restrict.stdout != "1"
   - name: "Reboot host"
-    reboot:
+    ansible.builtin.reboot:
     when: reboot.reboot_required or sysctl.changed
 
 - name: "Create software directory under root homedir, if it does not exist"
-  file:
+  ansible.builtin.file:
     path: "/root/software/"
     state: directory
 
 - name: "Check if installer package already exist"
-  stat:
+  ansible.builtin.stat:
     path: "/root/software/{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin"
   register: package
 
 - name: "Download installer package from local repository"
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ software_url }}/{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin"
     dest: "/root/software/"
     validate_certs: no
@@ -65,7 +65,7 @@
   when: package.stat.exists != True
 
 - name: "Deploy register_host file, for silent install"
-  template:
+  ansible.builtin.template:
     src: register.j2
     dest: /tmp/silentInstallsec
   
