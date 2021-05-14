@@ -6,7 +6,7 @@ Ansible role to install [Thales Vormetric Transparent Encryption](https://www.th
 Requirements
 ------------
 
-The role does not require anyting to run on RHEL and its derivatives.
+The role does not require anyting to run on RHEL and its derivatives. This role assumes that you have the software package located on a web server somewhere in your environment.
 
 Role Variables
 --------------
