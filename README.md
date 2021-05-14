@@ -13,7 +13,7 @@ Role Variables
 
 Available variables are listed below, along with default values ```(see defaults/main.yml)```:
 
-```
+``` yaml
 software_url: "http://www.example.org"
 package_base_name: "vee-fs"
 package_version: "6.3.1-82"
@@ -46,6 +46,7 @@ Example Playbook
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
+``` yaml
     - hosts: servers
       roles:
          - role: mikepruett3.vormetric-agent
@@ -56,6 +57,7 @@ Including an example of how to use your role (for instance, with variables passe
              dsm_hostname: "mydsm.example.org"
              host_domain: "dsm_domain"
              registration_secret: "mystrongpass"
+```
 
 License
 -------
