@@ -1,4 +1,6 @@
 ---
+# tasks file for ansible-role-vormetric-agent/
+
 - name: "Gather the package facts"
   ansible.builtin.package_facts:
     manager: auto
@@ -68,7 +70,7 @@
   ansible.builtin.template:
     src: register.j2
     dest: /tmp/silentInstallsec
-  
+
 - name: "Install Vormetric Agent, if not already installed"
   command: ./{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin -v -s /tmp/silentInstallsec
   args:
