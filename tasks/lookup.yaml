@@ -31,6 +31,7 @@
 - name: "Set Facts for Vormetric Agent Installed Version"
   ansible.builtin.set_fact:
     installed_version: "{{ result.stdout | replace ('-','.') }}"
+    package_version: "{{ package_version | replace ('-','.') }}"
   when:
     - result is defined
     - result.failed is false
