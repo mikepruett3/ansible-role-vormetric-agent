@@ -1,5 +1,5 @@
 ---
-# Lookup tasks file for ansible-role-nnt-agent
+# Lookup tasks file for ansible-role-vormetric-agent
 
 - name: "Check for Vormetric Agent install directory"
   ansible.builtin.stat:
@@ -30,7 +30,7 @@
 
 - name: "Set Facts for Vormetric Agent Installed Version"
   ansible.builtin.set_fact:
-    installed_version: "{{ result.stdout }}"
+    installed_version: "{{ result.stdout | replace ('-','.') }}"
   when:
     - result is defined
     - result.failed is false
@@ -40,4 +40,4 @@
     upgrade: true
   when:
     - installed_version is defined
-    - package_version | replace ('-','.') > installed_version
+    - package_version > installed_version
