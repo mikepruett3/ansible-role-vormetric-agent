@@ -40,4 +40,4 @@
     upgrade: true
   when:
     - installed_version is defined
-    - package_version > installed_version
+    - package_version | replace ('-','.') > installed_version
