@@ -1,0 +1,49 @@
+---
+# Upgrade tasks file for ansible-role-splunk
+
+- name: "Test if upgrade boolean variable is set correctly"
+  ansible.builtin.assert:
+    that:
+      - upgrade is defined
+      - upgrade is boolean
+    quiet: yes
+
+- name: "Collect all configured GuardPoints"
+  ansible.builtin.shell:
+    cmd: "secfsd -status guard | awk '{ print $1 }' | tail -n+3"
+  args:
+    chdir: "/bin/"
+  register: result
+
+- name: "Set Facts for Vormetric Agent Installed Version"
+  ansible.builtin.set_fact:
+    installed_version: "{{ result.stdout }}"
+  when:
+    - result is defined
+    - result.failed is false
+
+#- name: "Create software directory under root homedir, if it does not exist"
+#  ansible.builtin.file:
+#    path: "/root/software/vormetric/"
+#    state: directory
+
+#- name: "Check if installer package already exist"
+#  ansible.builtin.stat:
+#    path: "/root/software/vormetric/{{ package_name }}"
+#  register: package
+
+#- name: "Download installer package from local repository"
+#  ansible.builtin.get_url:
+#    url: "{{ software_url }}/{{ package_name }}"
+#    dest: "/root/software/vormetric/"
+#    validate_certs: no
+#    mode: '0770'
+#  when:
+#    - not package.stat.exists | bool
+
+#- name: "Install Vormetric Agent, if not already installed"
+#  ansible.builtin.shell:
+#    cmd: ./{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin -v -s /tmp/silentInstallsec
+#  args:
+#    chdir: "/root/software/vormetric/"
+#    creates: "/opt/vormetric/DataSecurityExpert/agent/secfs/bin/uninstall"

@@ -1,0 +1,43 @@
+---
+# Lookup tasks file for ansible-role-nnt-agent
+
+- name: "Check for Vormetric Agent install directory"
+  ansible.builtin.stat:
+    path: /opt/vormetric/DataSecurityExpert/agent/
+  register: result
+  ignore_errors: true
+
+- name: "Set Facts for Vormetric Agent install directory"
+  ansible.builtin.set_fact:
+    install_dir: /opt/vormetric/DataSecurityExpert/agent/
+  when:
+    - result.stat.exists
+    - result.stat.isdir
+    - result.failed is false
+
+- name: "Set Facts for Vormetric Agent Install variable"
+  ansible.builtin.set_fact:
+    install: true
+  when:
+    - install_dir is not defined
+
+- name: "Collect Vormetric Agent Installed Version"
+  ansible.builtin.shell:
+    cmd: "vmd -v | tail -n+2 | head -n1"
+  args:
+    chdir: "{{ install_dir }}/vmd/bin/"
+  register: result
+
+- name: "Set Facts for Vormetric Agent Installed Version"
+  ansible.builtin.set_fact:
+    installed_version: "{{ result.stdout }}"
+  when:
+    - result is defined
+    - result.failed is false
+
+- name: "Set Facts for Upgrade variable"
+  ansible.builtin.set_fact:
+    upgrade: true
+  when:
+    - installed_version is defined
+    - package_version > installed_version

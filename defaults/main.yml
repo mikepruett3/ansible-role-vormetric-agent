@@ -1,8 +1,13 @@
 ---
 software_url: "http://www.example.org"
-package_base_name: "vee-fs"
-package_version: "6.3.1-82"
+package_name: "vee-fs-7.4.0-130-rh8-x86_64.bin"
+package_version: "7.4.0-130"
 
-dsm_hostname: "mydsm.example.org"
-host_domain: "dsm_domain"
+register_dsm: false
+dsm_url: "mydsm.example.org"
+
+register_ctm: true
+ctm_url: "myctm.example.org"
+
+domain: "dsm_domain"
 registration_secret: "mystrongpass"

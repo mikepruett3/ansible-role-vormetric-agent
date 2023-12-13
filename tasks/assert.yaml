@@ -1,0 +1,44 @@
+---
+# Assert tasks file for ansible-role-nnt-agent
+
+- name: "Test if Software URL and Package Information is set correctly"
+  ansible.builtin.assert:
+    that:
+      - software_url is defined
+      - software_url is string
+      - package_name is defined
+      - package_name is string
+      - package_version is defined
+      - package_version is string
+    quiet: yes
+
+- name: "Test if DSM settings are set correctly"
+  ansible.builtin.assert:
+    that:
+      - dsm_url is defined
+      - dsm_url is string
+    quiet: yes
+  when:
+    - register_dsm is defined
+    - register_dsm is boolean
+    - register_dsm
+
+- name: "Test if CTM settings are set correctly"
+  ansible.builtin.assert:
+    that:
+      - ctm_url is defined
+      - ctm_url is string
+    quiet: yes
+  when:
+    - register_ctm is defined
+    - register_ctm is boolean
+    - register_ctm
+
+- name: "Test if Registration Information is set correctly"
+  ansible.builtin.assert:
+    that:
+      - domain is defined
+      - domain is string
+      - registration_secret is defined
+      - registration_secret is string
+    quiet: yes
