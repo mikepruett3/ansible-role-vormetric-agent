@@ -1,5 +1,5 @@
 ---
-# Upgrade tasks file for ansible-role-splunk
+# Upgrade tasks file for ansible-role-vormetric-agent
 
 - name: "Test if upgrade boolean variable is set correctly"
   ansible.builtin.assert:
@@ -15,9 +15,9 @@
     chdir: "/bin/"
   register: result
 
-- name: "Set Facts for Vormetric Agent Installed Version"
+- name: "Set Facts for GuardPoints"
   ansible.builtin.set_fact:
-    installed_version: "{{ result.stdout }}"
+    guardpoints: "{{ result.stdout }}"
   when:
     - result is defined
     - result.failed is false
