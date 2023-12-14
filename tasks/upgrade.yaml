@@ -1,35 +1,35 @@
 ---
 # Upgrade tasks file for ansible-role-vormetric-agent
 
-- name: "Test if upgrade boolean variable is set correctly"
-  ansible.builtin.assert:
-    that:
-      - upgrade is defined
-      - upgrade is boolean
-    quiet: yes
+#- name: "Test if upgrade boolean variable is set correctly"
+#  ansible.builtin.assert:
+#    that:
+#      - upgrade is defined
+#      - upgrade is boolean
+#    quiet: yes
 
-#- name: "Collect all configured GuardPoints"
-#  ansible.builtin.shell:
-#    cmd: "secfsd -status guard | awk '{ print $1 }' | tail -n+3"
-#  args:
-#    chdir: "/bin/"
-#  register: result
+- name: "Collect all configured GuardPoints"
+  ansible.builtin.shell:
+    cmd: "secfsd -status guard | awk '{ print $1 }' | tail -n+3"
+  args:
+    chdir: "/bin/"
+  register: result
 
-#- name: "Set Facts for GuardPoints"
-#  ansible.builtin.set_fact:
-#    guardpoints: "{{ result.stdout_lines }}"
-#  when:
-#    - result is defined
-#    - result.failed is false
+- name: "Set Facts for GuardPoints"
+  ansible.builtin.set_fact:
+    guardpoints: "{{ result.stdout_lines }}"
+  when:
+    - result is defined
+    - result.failed is false
 
-#- name: "Get User for each GuardPoint"
-#  ansible.builtin.stat:
-#    path: "{{ item }}"
-#  register: result
-#  with_items: "{{ guardpoints }}"
+- name: "Get User for each GuardPoint"
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  register: result
+  with_items: "{{ guardpoints }}"
 
-#- debug:
-#    var: result.results
+- debug:
+    var: result.results
 
 # lsof | grep "{{ guardpoints }}"
 

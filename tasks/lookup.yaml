@@ -41,5 +41,4 @@
     upgrade: true
   when:
     - installed_version is defined
-    #- package_version != installed_version
     - package_version is ansible.builtin.version(installed_version, '>')
