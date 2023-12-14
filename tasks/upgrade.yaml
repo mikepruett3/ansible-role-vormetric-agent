@@ -1,12 +1,12 @@
 ---
 # Upgrade tasks file for ansible-role-vormetric-agent
 
-#- name: "Test if upgrade boolean variable is set correctly"
-#  ansible.builtin.assert:
-#    that:
-#      - upgrade is defined
-#      - upgrade is boolean
-#    quiet: yes
+- name: "Test if upgrade boolean variable is set correctly"
+  ansible.builtin.assert:
+    that:
+      - upgrade is defined
+      - upgrade is boolean
+    quiet: yes
 
 - name: "Collect all configured GuardPoints"
   ansible.builtin.shell:
@@ -28,11 +28,6 @@
   register: lsof
   failed_when: lsof.rc == 0
   with_items: "{{ guardpoints }}"
-
-- debug:
-    var: result.results
-
-# lsof | grep "{{ guardpoints }}"
 
 #- name: "Create software directory under root homedir, if it does not exist"
 #  ansible.builtin.file:
