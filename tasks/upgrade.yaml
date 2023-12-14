@@ -25,7 +25,8 @@
 - name: "Check for open files in each GuardPoint"
   ansible.builtin.shell:
     cmd: "lsof | grep {{ item }}"
-  register: result
+  register: lsof
+  failed_when: lsof.rc == 0
   with_items: "{{ guardpoints }}"
 
 - debug:
