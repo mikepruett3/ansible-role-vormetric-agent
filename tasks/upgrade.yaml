@@ -8,28 +8,30 @@
       - upgrade is boolean
     quiet: yes
 
-- name: "Collect all configured GuardPoints"
-  ansible.builtin.shell:
-    cmd: "secfsd -status guard | awk '{ print $1 }' | tail -n+3"
-  args:
-    chdir: "/bin/"
-  register: result
+#- name: "Collect all configured GuardPoints"
+#  ansible.builtin.shell:
+#    cmd: "secfsd -status guard | awk '{ print $1 }' | tail -n+3"
+#  args:
+#    chdir: "/bin/"
+#  register: result
 
-- name: "Set Facts for GuardPoints"
-  ansible.builtin.set_fact:
-    guardpoints: "{{ result.stdout_lines }}"
-  when:
-    - result is defined
-    - result.failed is false
+#- name: "Set Facts for GuardPoints"
+#  ansible.builtin.set_fact:
+#    guardpoints: "{{ result.stdout_lines }}"
+#  when:
+#    - result is defined
+#    - result.failed is false
 
-- name: "Get User for each GuardPoint"
-  ansible.builtin.stat:
-    path: "{{ item }}"
-  register: result
-  with_items: "{{ guardpoints }}"
+#- name: "Get User for each GuardPoint"
+#  ansible.builtin.stat:
+#    path: "{{ item }}"
+#  register: result
+#  with_items: "{{ guardpoints }}"
 
-- debug:
-    var: result.results
+#- debug:
+#    var: result.results
+
+# lsof | grep "{{ guardpoints }}"
 
 #- name: "Create software directory under root homedir, if it does not exist"
 #  ansible.builtin.file:
@@ -50,9 +52,8 @@
 #  when:
 #    - not package.stat.exists | bool
 
-#- name: "Install Vormetric Agent, if not already installed"
-#  ansible.builtin.shell:
-#    cmd: ./{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin -v -s /tmp/silentInstallsec
+#- name: "Upgrade Vormetric Agent"
+#  ansible.builtin.command:
+#    cmd: ./{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin -y -u
 #  args:
 #    chdir: "/root/software/vormetric/"
-#    creates: "/opt/vormetric/DataSecurityExpert/agent/secfs/bin/uninstall"
