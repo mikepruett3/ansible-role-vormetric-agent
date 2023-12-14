@@ -29,7 +29,7 @@
   with_items: "{{ guardpoints }}"
 
 - debug:
-    var: result
+    var: result.stat.pw_name
 
 #- name: "Create software directory under root homedir, if it does not exist"
 #  ansible.builtin.file:
