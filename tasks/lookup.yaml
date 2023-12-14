@@ -42,4 +42,4 @@
   when:
     - installed_version is defined
     #- package_version != installed_version
-    - package_version | int > installed_version | int
+    - package_version is ansible.builtin.version(installed_version, '>')
