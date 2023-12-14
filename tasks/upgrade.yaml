@@ -24,8 +24,9 @@
 
 - name: "Get User for each GuardPoint"
   ansible.builtin.stat:
-    path: "{{ guardpoints }}"
+    path: "{{ item }}"
   register: result
+  with_items: "{{ guardpoints }}"
 
 #- name: "Create software directory under root homedir, if it does not exist"
 #  ansible.builtin.file:
