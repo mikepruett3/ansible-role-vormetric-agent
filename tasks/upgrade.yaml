@@ -28,6 +28,9 @@
   register: result
   with_items: "{{ guardpoints }}"
 
+- debug:
+    var: result
+
 #- name: "Create software directory under root homedir, if it does not exist"
 #  ansible.builtin.file:
 #    path: "/root/software/vormetric/"
