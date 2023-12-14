@@ -22,9 +22,9 @@
     - result is defined
     - result.failed is false
 
-- name: "Get User for each GuardPoint"
-  ansible.builtin.stat:
-    path: "{{ item }}"
+- name: "Check for open files in each GuardPoint"
+  ansible.builtin.shell:
+    cmd: "lsof | grep {{ item }}"
   register: result
   with_items: "{{ guardpoints }}"
 
