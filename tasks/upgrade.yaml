@@ -22,6 +22,11 @@
     - result is defined
     - result.failed is false
 
+- name: "Get User for each GuardPoint"
+  ansible.builtin.stat:
+    path: "{{ guardpoints }}"
+  register: result
+
 #- name: "Create software directory under root homedir, if it does not exist"
 #  ansible.builtin.file:
 #    path: "/root/software/vormetric/"
