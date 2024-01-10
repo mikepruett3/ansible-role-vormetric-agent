@@ -50,6 +50,6 @@
 
 - name: "Upgrade Vormetric Agent"
   ansible.builtin.command:
-    cmd: ./{{ package_name }} -y -u
+    cmd: ./{{ package_name }} -u -y
   args:
     chdir: "/root/software/vormetric/"
