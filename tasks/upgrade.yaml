@@ -48,8 +48,8 @@
   when:
     - not package.stat.exists | bool
 
-#- name: "Upgrade Vormetric Agent"
-#  ansible.builtin.command:
-#    cmd: ./{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin -y -u
-#  args:
-#    chdir: "/root/software/vormetric/"
+- name: "Upgrade Vormetric Agent"
+  ansible.builtin.command:
+    cmd: ./{{ package_name }} -y -u
+  args:
+    chdir: "/root/software/vormetric/"
