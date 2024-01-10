@@ -1,12 +1,12 @@
 ---
 # Upgrade tasks file for ansible-role-vormetric-agent
 
-#- name: "Test if upgrade boolean variable is set correctly"
-#  ansible.builtin.assert:
-#    that:
-#      - upgrade is defined
-#      - upgrade is boolean
-#    quiet: yes
+- name: "Test if upgrade boolean variable is set correctly"
+  ansible.builtin.assert:
+    that:
+      - upgrade is defined
+      - upgrade is boolean
+    quiet: yes
 
 - name: "Collect all configured GuardPoints"
   ansible.builtin.shell:
@@ -34,27 +34,27 @@
     path: "/root/software/vormetric/"
     state: directory
 
-#- name: "Check if installer package already exist"
-#  ansible.builtin.stat:
-#    path: "/root/software/vormetric/{{ package_name }}"
-#  register: package
+- name: "Check if installer package already exist"
+  ansible.builtin.stat:
+    path: "/root/software/vormetric/{{ package_name }}"
+  register: package
 
-#- name: "Download installer package from local repository"
-#  ansible.builtin.get_url:
-#    url: "{{ software_url }}/{{ package_name }}"
-#    dest: "/root/software/vormetric/"
-#    validate_certs: no
-#    mode: '0770'
-#  when:
-#    - not package.stat.exists | bool
+- name: "Download installer package from local repository"
+  ansible.builtin.get_url:
+    url: "{{ software_url }}/{{ package_name }}"
+    dest: "/root/software/vormetric/"
+    validate_certs: no
+    mode: '0770'
+  when:
+    - not package.stat.exists | bool
 
-#- name: "Create temp folder in package directory"
-#  ansible.builtin.file:
-#    path: "/root/software/vormetric/temp/"
-#    state: directory
+- name: "Create temp folder in package directory"
+  ansible.builtin.file:
+    path: "/root/software/vormetric/temp/"
+    state: directory
 
-#- name: "Upgrade Vormetric Agent"
-#  ansible.builtin.command:
-#    cmd: ./{{ package_name }} -u -y -t /root/software/vormetric/temp/
-#  args:
-#    chdir: "/root/software/vormetric/"
+- name: "Upgrade Vormetric Agent"
+  ansible.builtin.command:
+    cmd: ./{{ package_name }} -u -y -t /root/software/vormetric/temp/
+  args:
+    chdir: "/root/software/vormetric/"
