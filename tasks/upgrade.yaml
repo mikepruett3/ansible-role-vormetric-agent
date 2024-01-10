@@ -29,24 +29,24 @@
   failed_when: lsof.rc == 0
   with_items: "{{ guardpoints }}"
 
-#- name: "Create software directory under root homedir, if it does not exist"
-#  ansible.builtin.file:
-#    path: "/root/software/vormetric/"
-#    state: directory
+- name: "Create software directory under root homedir, if it does not exist"
+  ansible.builtin.file:
+    path: "/root/software/vormetric/"
+    state: directory
 
-#- name: "Check if installer package already exist"
-#  ansible.builtin.stat:
-#    path: "/root/software/vormetric/{{ package_name }}"
-#  register: package
+- name: "Check if installer package already exist"
+  ansible.builtin.stat:
+    path: "/root/software/vormetric/{{ package_name }}"
+  register: package
 
-#- name: "Download installer package from local repository"
-#  ansible.builtin.get_url:
-#    url: "{{ software_url }}/{{ package_name }}"
-#    dest: "/root/software/vormetric/"
-#    validate_certs: no
-#    mode: '0770'
-#  when:
-#    - not package.stat.exists | bool
+- name: "Download installer package from local repository"
+  ansible.builtin.get_url:
+    url: "{{ software_url }}/{{ package_name }}"
+    dest: "/root/software/vormetric/"
+    validate_certs: no
+    mode: '0770'
+  when:
+    - not package.stat.exists | bool
 
 #- name: "Upgrade Vormetric Agent"
 #  ansible.builtin.command:
