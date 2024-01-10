@@ -48,8 +48,13 @@
   when:
     - not package.stat.exists | bool
 
+- name: "Create temp folder in package directory"
+  ansible.builtin.file:
+    path: "/root/software/vormetric/temp/"
+    state: directory
+
 - name: "Upgrade Vormetric Agent"
   ansible.builtin.command:
-    cmd: ./{{ package_name }} -u -y
+    cmd: ./{{ package_name }} -u -y -t /root/software/vormetric/temp/
   args:
     chdir: "/root/software/vormetric/"
