@@ -100,9 +100,9 @@
     - register_ctm is boolean
     - register_ctm | bool
 
-#- name: "Install Transparent Encryption Agent"
-#  ansible.builtin.command:
-#    cmd: ./{{ package_name }} -y -s /tmp/unattended.txt
-#  args:
-#    chdir: "/root/software/vormetric/"
-#    creates: "/opt/vormetric/DataSecurityExpert/agent/"
+- name: "Install Transparent Encryption Agent"
+  ansible.builtin.command:
+    cmd: ./{{ package_name }} -s /tmp/unattended.txt -y
+  args:
+    chdir: "/root/software/vormetric/"
+    creates: "/opt/vormetric/DataSecurityExpert/agent/"

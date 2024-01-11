@@ -55,6 +55,6 @@
 
 - name: "Upgrade Transparent Encryption Agentt"
   ansible.builtin.command:
-    cmd: ./{{ package_name }} -u -y -t /root/software/vormetric/temp/
+    cmd: ./{{ package_name }} -t /root/software/vormetric/temp/ -u -y
   args:
     chdir: "/root/software/vormetric/"
