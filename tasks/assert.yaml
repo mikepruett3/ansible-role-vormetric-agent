@@ -1,5 +1,5 @@
 ---
-# Assert tasks file for ansible-role-nnt-agent
+# Assert tasks file for ansible-role-vormetric-agent
 
 - name: "Test if Software URL and Package Information is set correctly"
   ansible.builtin.assert:

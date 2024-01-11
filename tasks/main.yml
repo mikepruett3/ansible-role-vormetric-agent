@@ -1,78 +1,42 @@
 ---
 # tasks file for ansible-role-vormetric-agent/
 
-- name: "Gather the package facts"
-  ansible.builtin.package_facts:
-    manager: auto
-  when: ansible_facts.packages is not defined
-
-- name: "Host Setup/Changes"
-  block:
-  - name: "Disable SELinux"
-    selinux:
-      state: disabled
-    register: reboot
-  - name: "Add hosts entry for local host IP address"
-    ansible.builtin.lineinfile:
-      path: /etc/hosts
-      insertafter: EOF
-      line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }}  {{ inventory_hostname.split('.')[0] }}"
-  - name: "Retrieve /tmp mount point Source"
-    shell: findmnt --fstab --target '/tmp' | tail -n 1 | awk '{ print $2 }'
-    register: src
-  - name: "Retrieve /tmp mount point FSType"
-    shell: findmnt --fstab --target '/tmp' | tail -n 1 | awk '{ print $3 }'
-    register: fstype
-  - name: "Retrieve /tmp mount point Options"
-    shell: findmnt --fstab --target '/tmp' | tail -n 1 | awk '{ print $4 }'
-    register: opts
-  - name: "Configure default mount options on /tmp mount point"
-    mount:
-      path: /tmp
-      src: "{{ src.stdout|string }}"
-      fstype: "{{ fstype.stdout|string }}"
-      opts: defaults
-      state: mounted
-    when: opts.stdout != "defaults"
-  - name: "Retrieve Kernel Symbols sysctl"
-    command: sysctl -n kernel.kptr_restrict
-    register: kptr_restrict
-  - name: "Enable full Kernel Symbols to prevent SegFault"
-    ansible.builtin.sysctl:
-      name: kernel.kptr_restrict
-      value: '1'
-      state: present
-    register: sysctl
-    when: kptr_restrict.stdout != "1"
-  - name: "Reboot host"
-    ansible.builtin.reboot:
-    when: reboot.reboot_required or sysctl.changed
-
-- name: "Create software directory under root homedir, if it does not exist"
-  ansible.builtin.file:
-    path: "/root/software/"
-    state: directory
-
-- name: "Check if installer package already exist"
-  ansible.builtin.stat:
-    path: "/root/software/{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin"
-  register: package
-
-- name: "Download installer package from local repository"
-  ansible.builtin.get_url:
-    url: "{{ software_url }}/{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin"
-    dest: "/root/software/"
+- name: "Test Access to CipherTrust Manager (CTM)"
+  ansible.builtin.uri:
+    url: "{{ ctm_url }}"
+    method: GET
     validate_certs: no
-    mode: 0777
-  when: package.stat.exists != True
+    status_code: [200, 400]
+  when:
+    - register_ctm is defined
+    - register_ctm is boolean
+    - register_ctm | bool
 
-- name: "Deploy register_host file, for silent install"
-  ansible.builtin.template:
-    src: register.j2
-    dest: /tmp/silentInstallsec
+- name: "Test Access to Vormetric Data Security Manager (DSM)"
+  ansible.builtin.uri:
+    url: "{{ dsm_url }}"
+    method: GET
+    validate_certs: no
+    status_code: [200, 400]
+  when:
+    - register_dsm is defined
+    - register_dsm is boolean
+    - register_dsm | bool
 
-- name: "Install Vormetric Agent, if not already installed"
-  command: ./{{ package_base_name }}-{{ package_version }}-rh{{ ansible_distribution_major_version }}-{{ ansible_architecture }}.bin -v -s /tmp/silentInstallsec
-  args:
-    chdir: "/root/software/"
-    creates: "/opt/vormetric/DataSecurityExpert/agent/secfs/bin/uninstall"
+- name: "Include tasks from assert playbook"
+  ansible.builtin.include_tasks: assert.yaml
+
+- name: "Include tasks from lookup playbook"
+  ansible.builtin.include_tasks: lookup.yaml
+
+- name: "Include tasks from install playbook"
+  ansible.builtin.include_tasks: install.yaml
+  when:
+    - install is defined
+    - install | bool
+
+- name: "Include tasks from upgrade playbook"
+  ansible.builtin.include_tasks: upgrade.yaml
+  when:
+    - upgrade is defined
+    - upgrade | bool
