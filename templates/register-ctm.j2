@@ -2,6 +2,6 @@
 
 SERVER_HOSTNAME={{ ctm_url }}
 REG_TOKEN={{ registration_secret | quote }}
-HOST_PROFILE="Default"
-AGENT_HOST_NAME={{ ansible_fqdn }}
+HOST_PROFILE=Default
+AGENT_HOST_NAME={{ ansible_fqdn | lower }}
 ENABLE_LDT=1
