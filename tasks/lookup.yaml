@@ -27,6 +27,8 @@
   args:
     chdir: "{{ install_dir }}/vmd/bin/"
   register: result
+  when:
+    - install_dir is defined
 
 - name: "Set Facts for Vormetric Agent Installed Version"
   ansible.builtin.set_fact:
