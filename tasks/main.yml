@@ -3,7 +3,7 @@
 
 - name: "Test Access to CipherTrust Manager (CTM)"
   ansible.builtin.uri:
-    url: "{{ ctm_url }}"
+    url: "https://{{ ctm_url }}"
     method: GET
     validate_certs: no
     status_code: [200, 400]
@@ -14,7 +14,7 @@
 
 - name: "Test Access to Vormetric Data Security Manager (DSM)"
   ansible.builtin.uri:
-    url: "{{ dsm_url }}"
+    url: "https://{{ dsm_url }}"
     method: GET
     validate_certs: no
     status_code: [200, 400]
