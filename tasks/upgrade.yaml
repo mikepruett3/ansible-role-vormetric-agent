@@ -53,7 +53,7 @@
     path: "/root/software/vormetric/temp/"
     state: directory
 
-- name: "Upgrade Vormetric Agent"
+- name: "Upgrade Transparent Encryption Agentt"
   ansible.builtin.command:
     cmd: ./{{ package_name }} -u -y -t /root/software/vormetric/temp/
   args:

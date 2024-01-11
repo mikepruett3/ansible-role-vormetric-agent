@@ -1,0 +1,108 @@
+---
+# Install tasks file for ansible-role-vormetric-agent/
+
+- name: "Test if install boolean variable is set correctly"
+  ansible.builtin.assert:
+    that:
+      - install is defined
+      - install is boolean
+    quiet: yes
+
+- name: "Disable SELinux"
+  ansible.posix.selinux:
+    state: disabled
+  register: reboot
+
+- name: "Add hosts entry for local host IP address"
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    insertafter: EOF
+    line: "{{ ansible_default_ipv4.address }} {{ inventory_hostname }}  {{ inventory_hostname.split('.')[0] }}"
+
+- name: "Retrieve /tmp mount point Source"
+  ansible.builtin.shell:
+    cmd: findmnt --fstab --target '/tmp' | tail -n 1 | awk '{ print $2 }'
+  register: src
+
+- name: "Retrieve /tmp mount point FSType"
+  ansible.builtin.shell:
+    cmd: findmnt --fstab --target '/tmp' | tail -n 1 | awk '{ print $3 }'
+  register: fstype
+
+- name: "Retrieve /tmp mount point Options"
+  ansible.builtin.shell:
+    cmd: findmnt --fstab --target '/tmp' | tail -n 1 | awk '{ print $4 }'
+  register: opts
+
+- name: "Configure default mount options on /tmp mount point"
+  ansible.posix.mount:
+    path: /tmp
+    src: "{{ src.stdout|string }}"
+    fstype: "{{ fstype.stdout|string }}"
+    opts: defaults
+    state: mounted
+  when:
+    - opts.stdout != "defaults"
+
+- name: "Retrieve Kernel Symbols sysctl"
+  ansible.builtin.shell:
+    cmd: sysctl -n kernel.kptr_restrict
+  register: kptr_restrict
+
+- name: "Enable full Kernel Symbols to prevent SegFault"
+  ansible.posix.sysctl:
+    name: kernel.kptr_restrict
+    value: '1'
+    state: present
+  register: sysctl
+  when:
+    - kptr_restrict.stdout != "1"
+
+- name: "Reboot host"
+  ansible.builtin.reboot:
+  when:
+    - reboot.reboot_required or sysctl.changed
+
+- name: "Create software directory under root homedir, if it does not exist"
+  ansible.builtin.file:
+    path: "/root/software/vormetric/"
+    state: directory
+
+- name: "Check if installer package already exist"
+  ansible.builtin.stat:
+    path: "/root/software/vormetric/{{ package_name }}"
+  register: package
+
+- name: "Download installer package from local repository"
+  ansible.builtin.get_url:
+    url: "{{ software_url }}/{{ package_name }}"
+    dest: "/root/software/vormetric/"
+    validate_certs: no
+    mode: '0770'
+  when:
+    - not package.stat.exists | bool
+
+- name: "Deploy register_host file, for silent install (DSM)"
+  ansible.builtin.template:
+    src: register-dsm.j2
+    dest: /tmp/unattended.txt
+  when:
+    - register_dsm is defined
+    - register_dsm is boolean
+    - register_dsm | bool
+
+- name: "Deploy register_host file, for silent install (CTM)"
+  ansible.builtin.template:
+    src: register-ctm.j2
+    dest: /tmp/unattended.txt
+  when:
+    - register_ctm is defined
+    - register_ctm is boolean
+    - register_ctm | bool
+
+- name: "Install Transparent Encryption Agent"
+  ansible.builtin.command:
+    cmd: ./{{ package_name }} -y -s /tmp/unattended.txt
+  args:
+    chdir: "/root/software/vormetric/"
+    creates: "/opt/vormetric/DataSecurityExpert/agent/"

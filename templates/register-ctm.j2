@@ -1,0 +1,7 @@
+# {{ ansible_managed | comment }}
+
+SERVER_HOSTNAME={{ ctm_url }}
+REG_TOKEN={{ registration_secret | quote }}
+HOST_PROFILE="Default"
+AGENT_HOST_NAME={{ ansible_fqdn }}
+ENABLE_LDT=1

@@ -1,6 +1,6 @@
 # {{ ansible_managed | comment }}
 
-SERVER_HOSTNAME={{ dsm_hostname }}
+SERVER_HOSTNAME={{ dsm_url }}
 AGENT_HOST_NAME={{ ansible_fqdn }}
-HOST_DOMAIN={{ host_domain }}
+HOST_DOMAIN={{ domain }}
 SHARED_SECRET={{ registration_secret | quote }}
