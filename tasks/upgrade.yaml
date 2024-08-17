@@ -53,6 +53,7 @@
     path: "/root/software/vormetric/temp/"
     state: directory
 
+# Fix from https://thalesdocs.com/ctp/cte-con/cte/latest/release-notes/linux-rn/index.html#known-issues
 - name: "Upgrade Transparent Encryption Agent (RedHat8)"
   ansible.builtin.command:
     cmd: ./{{ package_name }} -t /root/software/vormetric/temp/ -u -y
