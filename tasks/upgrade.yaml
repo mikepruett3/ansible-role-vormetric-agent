@@ -53,8 +53,29 @@
     path: "/root/software/vormetric/temp/"
     state: directory
 
-- name: "Upgrade Transparent Encryption Agent"
+- name: "Upgrade Transparent Encryption Agent (RedHat8)"
   ansible.builtin.command:
     cmd: ./{{ package_name }} -t /root/software/vormetric/temp/ -u -y
   args:
     chdir: "/root/software/vormetric/"
+  ignore_errors: true
+  when:
+    - ansible_facts['distribution'] == "RedHat"
+    - ansible_facts['distribution_major_version'] == "8"
+
+- name: "Upgrade Transparent Encryption Agent (RedHat)"
+  ansible.builtin.command:
+    cmd: ./{{ package_name }} -t /root/software/vormetric/temp/ -u -y
+  args:
+    chdir: "/root/software/vormetric/"
+  when:
+    - ansible_facts['os_family'] == "RedHat"
+    - ansible_facts['distribution_major_version'] != "8"
+
+- name: "Upgrade Transparent Encryption Agent (Debian)"
+  ansible.builtin.command:
+    cmd: ./{{ package_name }} -t /root/software/vormetric/temp/ -u -y
+  args:
+    chdir: "/root/software/vormetric/"
+  when:
+    - ansible_facts['os_family'] == "Debian"
